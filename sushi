@@ -1,0 +1,6 @@
+#!/bin/bash
+
+title=`printf "%-40s %-20s %s" 名前 カロリー\(kcal\) 店内価格税込\(円\)`
+
+sushi_info=`curl -s https://www.kappasushi.jp/master_data/json/menulist.json | jq -r '.Product[] | select(.name | contains ("'$1'")) | [.name, .cal, .sell_price_tax10per]| @tsv' | awk -F '\t' '{printf "%-20s%-10s%s\n", $1, $2, $3}' | sed -e 's/<br>/　/g' -e 's/ /  /g'`
+echo -e "${title}\\n${sushi_info}"
